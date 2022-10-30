@@ -22,7 +22,7 @@ func (l *Level) exploreMove(ss *SolvingState, i, j int) (solution *[][2]int) {
 	if !vialI.CanPourInto(&vialJ) {
 		return nil
 	}
-	innocuous := vialJ.Empty() && vialI.TopQty()+vialI.SpaceLeft() == 4
+	innocuous := vialJ.Empty() && vialI.TopQty()+vialI.SpaceLeft() == vailSize
 	// last expresion after && is proxy for 'there is only one color in vialI'
 	if innocuous {
 		return nil

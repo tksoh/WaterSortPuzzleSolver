@@ -23,7 +23,9 @@ const (
 	LBLUE  Color = iota
 )
 
-type Vial [4]Color
+const vailSize int = 5
+
+type Vial [vailSize]Color
 
 type Level struct {
 	Size  int
@@ -32,7 +34,7 @@ type Level struct {
 
 func (v *Vial) Valid() bool {
 	onAir := v[0] == AIR
-	for i := 0; i < 4; i++ {
+	for i := 0; i < vailSize; i++ {
 		if v[i] == AIR {
 			if !onAir {
 				return false
@@ -49,7 +51,7 @@ func (v *Vial) Finished() bool {
 	if c0 == AIR {
 		return false
 	}
-	for i := 3; i >= 0; i-- {
+	for i := vailSize - 1; i >= 0; i-- {
 		if v[i] != c0 {
 			return false
 		}
@@ -58,7 +60,7 @@ func (v *Vial) Finished() bool {
 }
 
 func (v *Vial) TopColor() Color {
-	for i := 0; i < 4; i++ {
+	for i := 0; i < vailSize; i++ {
 		if v[i] != AIR {
 			return v[i]
 		}
@@ -72,17 +74,17 @@ func (v *Vial) TopQty() (qty int) { // perf
 		return 0
 	}
 	i := 0
-	for ; i < 4 && v[i] != c; i++ {
+	for ; i < vailSize && v[i] != c; i++ {
 	}
 	qty = 0
-	for ; i < 4 && v[i] == c; i++ {
+	for ; i < vailSize && v[i] == c; i++ {
 		qty++
 	}
 	return
 }
 
 func (v *Vial) SpaceLeft() (left int) {
-	for i := 3; i >= 0; i-- {
+	for i := vailSize - 1; i >= 0; i-- {
 		if v[i] == AIR {
 			return i + 1
 		}
@@ -91,7 +93,7 @@ func (v *Vial) SpaceLeft() (left int) {
 }
 
 func (v *Vial) Empty() bool {
-	return v[3] == AIR
+	return v[vailSize-1] == AIR
 }
 
 func (v *Vial) Full() bool {
@@ -132,12 +134,12 @@ func (l *Level) Valid() bool {
 		if !l.Vials[i].Valid() {
 			return false
 		}
-		for j := 0; j < 4; j++ {
+		for j := 0; j < vailSize; j++ {
 			counts[l.Vials[i][j]]++
 		}
 	}
 	for _, v := range counts {
-		if v%4 != 0 {
+		if v%vailSize != 0 {
 			return false
 		}
 	}
@@ -197,7 +199,7 @@ func (l *Level) ReturnBuffer() {
 
 func (l *Level) Solved() bool {
 	for i := 0; i < l.Size; i++ {
-		if !l.Vials[i].Finished() && l.Vials[i].SpaceLeft() != 4 {
+		if !l.Vials[i].Finished() && l.Vials[i].SpaceLeft() != vailSize {
 			return false
 		}
 	}
